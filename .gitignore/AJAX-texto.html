@@ -1,0 +1,59 @@
+<html>
+
+<body>
+    <div id="texto">
+        <h1>AJAX</h1>
+        <button id="cambiaContenido">Cambia el contenido</button>
+    </div>
+
+    <script>
+        //AJAX: JavaScript Asíncrono y XML. Trabajamos con DOM también,...
+        //La base de la programación con Ajax es el objeto XMLHTTPrequest. Solicitar datos al servidor y procesarlos. La actualización de las páginas es de forma asíncrona (en un 2º plano). Sin utilizar AJAX, al enviar datos al servidor la página se recargaría. Aquí el procesamiento se da mientras el cliente interactúa con la página sin que este se de cuenta.
+
+        //Esto pasa en el email por ejemplo, al recibir un mensaje no tenemos que recargar la página para verlo, aparece directamente él solo en la bandeja de entrada. No perdemos la comunicación con el navegador.
+
+        //Ya hemos visto que AJAX utiliza el objeto XMLHttpRequest que está en los navegadores modernos. Si no tendríamos que utilizar ActiveX.
+        //Al hacer una petición al servidor entramos en un proceso que pasa por 5 fases:
+        /* - Solicitud no inicializada
+            - Se establece la conexión con el servidor
+            - Se recibe la solicitud
+            - Se procesa
+            - La solicitud ha sido finalizada y la respuesta está lista (nos llega la respuesta) */
+
+            //También tenemos el status de la solicitud 
+
+        //Métodos importantes: open y send.
+
+        /*El texto que vamos a tomar lo tomamos del servidor. Servidor Web Local Samp. Alojados en la carpeta ht2 de Samp. No vamos a utilizar php luego no necesitamos ejercutarlos desde un servidor local como Samp. Pero en muchos navegadores lo necesitamos ejecutar desde localhost y, no desde la ruta normal, local. En chrome deberíamos configurar el navegador para que ejecute archivos locales */
+
+        //Asignamos al botón el evento, para que al hacer click ejecute la función:
+        document.getElementById("cambiaContenido").addEventListener("click", cambiaContenido);
+
+        //Esta función crea el objeto XMLhttpRequest e indica qué función se va a ejecutar en cada uno de los cambios de estado
+        function cambiaContenido() {
+
+            var xhr = new XMLHttpRequest(); //Definimos el objeto
+            //Ahora definimos qué función va a ser llamada cuando cambie la propiedad readystate
+            //El ready state va a ir cambiando cada vez que enviamos la solicitud, del 0 al 1, del 1 al 2,...
+            xhr.onreadystatechange = function () {
+                //Nos interesa el estado 4 como ya dijimos y el status bueno es el 200
+                if (this.readyState == 4 && this.status == 200) {
+                    //Escribimos en el div texto.
+                    document.getElementById("texto").innerHTML = this.responseText; //Si fuese un documento en xml, pondríamos responsexml
+                }
+            };
+            /* .open: especifica la solicitud
+             - GET/POST. (El tipp de envío. Get es rápido pero si es menor de 2000 caracteres). La mayoría de programadores usan POST
+             - Archivo (que vamos a procesar): txt, php, xml, json, etc.
+             - true/false: método de envío. Método asíncrono (true), envío síncrono (false) no continúa hasta que la respuesta esté lista*/
+             //nombre del archivo
+            xhr.open("GET", "holamundo.txt", true);
+            /* .send: envía la solicitud al servidor.
+                Si utilizamos POST debemos pasar los datos por parámetro (entre paréntesis)*/
+            xhr.send();
+        }
+    </script>
+
+</body>
+
+</html>
