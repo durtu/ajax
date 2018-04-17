@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        
+        th,
+        td {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="texto">
+        <h1>Colección de CDs</h1>
+        <button id="cargaCatalogo">Carga catálogo</button>
+        <!-- Al pulsar va a volcar los datos de un XML en una tabla. El XML está bajado de W3Schools -->
+    </div>
+    <table id="demo"></table>
+
+    <script>
+        //Asociamos un evento al botón anterior:
+        document.getElementById("cargaCatalogo").addEventListener("click", cargarCatalogo);
+        function cargarCatalogo() {
+            //creamos el objeto xhr para Ajax:
+            var xhr = new XMLHttpRequest();
+            //Definimos la función que se ejecuta por cada cambio de estado:
+            xhr.onreadystatechange = function () {
+                //Si el estado es 4 y el status es 200 se carga el XML
+                if (this.readyState == 4 && this.status == 200) {
+                    cargarXML(this); //Llamamos a la función que definimos más abajo
+                }
+            };
+            //metodo open para obtener los datos. Lo ejecutamos de manera asíncrona (true):
+            xhr.open("GET", "catalogo.xml", true);
+            //Enviamos. Si utilizáramos el método post tendríamos que meter parámetros:
+            xhr.send();
+        }
+
+        function cargarXML(xml) {
+            //capturamos la respuesta de la solicitudque nos va a devolver el servidor:
+            var docXML = xml.responseXML; //porque vamos a cargar un archivo XML
+            //Definimos la tabla creada anteriormente:
+            var tabla = "<tr><th>Artista</th><th>Titulo</th></tr>"; //1a fila
+            //por ser un documento XML. Extraemos todos los elementos CD del XML
+            var discos = docXML.getElementsByTagName("CD");
+            //recorremos el array discos:
+            for (var i = 0; i < discos.length; i++) {
+                //Principio de la fila y principio de la celda
+                tabla += "<tr><td>";
+                //capturamos el primer artista con el 0. Extraemos el texto del interior:
+                tabla += discos[i].getElementsByTagName("ARTIST")[0].textContent;
+                //Final de la celda y principio de la siguiente:
+                tabla += "</td><td>";
+                //Elemento título del disco:
+                tabla += discos[i].getElementsByTagName("TITLE")[0].textContent;
+                //Final de la celda y fila
+                tabla += "</td></tr>";
+            }
+            //Pasamos el código a la tabla "demo"
+            document.getElementById("demo").innerHTML = tabla;
+        }
+    </script>
+
+</body>
+
+</html>
